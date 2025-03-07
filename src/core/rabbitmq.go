@@ -12,9 +12,9 @@ import (
 var RabbitChannel *amqp091.Channel
 
 func InitRabbitMQ() error {
-	err := godotenv.Load("C:\\Users\\Fredy De la rosa\\Documents\\arquitectura\\rest\\src\\core\\.env")
+	err := godotenv.Load("C:\\Users\\Fredy De la rosa\\Documents\\arquitectura\\eventdriven\\sensores\\src\\core\\.env")
 	if err != nil {
-		log.Fatalf("❌ Error cargando el archivo .env: %v", err)
+		log.Fatalf("Error cargando el archivo .env: %v", err)
 	}
 
 	url := fmt.Sprintf("amqp://%s:%s@%s:%s/",

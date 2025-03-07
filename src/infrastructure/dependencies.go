@@ -3,7 +3,7 @@ package infrastructure
 import (
 	"sensor/src/application"
 	"sensor/src/core"
-	//"sensor/src/infrastructure/repositories"
+	"sensor/src/infrastructure/services"
 )
 
 type Dependencies struct {
@@ -16,9 +16,10 @@ func NewDependencies() (*Dependencies, error) {
 		return nil, err
 	}
 
+	rabbitService := services.NewRabbitMQService()
 	mysqlRepo := NewMySQLEventRepository(db)
 
 	return &Dependencies{
-		CreateEventUseCase: application.NewCreateEventUseCase(mysqlRepo),
+		CreateEventUseCase: application.NewCreateEventUseCase(mysqlRepo, rabbitService),
 	}, nil
 }

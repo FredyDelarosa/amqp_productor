@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"net/http"
 	"sensor/src/application"
 	"sensor/src/domain/entities"
 
@@ -18,15 +19,15 @@ func NewEventController(useCase *application.CreateEventUseCase) *EventControlle
 func (ctrl *EventController) CreateEvent(c *gin.Context) {
 	var event entities.Event
 	if err := c.ShouldBindJSON(&event); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	err := ctrl.useCase.Execute(&event)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Error procesando el evento"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error procesando el evento"})
 		return
 	}
 
-	c.JSON(201, gin.H{"message": "Evento creado"})
+	c.JSON(http.StatusCreated, gin.H{"message": "Evento registrado exitosamente"})
 }
