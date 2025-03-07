@@ -11,8 +11,7 @@ import (
 )
 
 func InitDB() (*sql.DB, error) {
-	// Cargar variables de entorno
-	err := godotenv.Load("C:\\Users\\Fredy De la rosa\\Documents\\arquitectura\\eventdriven\\sensores\\src\\core\\.env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error cargando el archivo .env: %v", err)
 	}
