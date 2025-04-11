@@ -16,10 +16,10 @@ func NewDependencies() (*Dependencies, error) {
 		return nil, err
 	}
 
-	rabbitService := services.NewRabbitMQService()
+	publisher := services.NewRabbitMQPublisher()
 	mysqlRepo := NewMySQLEventRepository(db)
 
 	return &Dependencies{
-		CreateEventUseCase: application.NewCreateEventUseCase(mysqlRepo, rabbitService),
+		CreateEventUseCase: application.NewCreateEventUseCase(mysqlRepo, publisher),
 	}, nil
 }

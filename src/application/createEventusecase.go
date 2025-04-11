@@ -2,25 +2,23 @@ package application
 
 import (
 	"sensor/src/domain/entities"
+	"sensor/src/domain/ports"
 	"sensor/src/domain/repositories"
-	"sensor/src/infrastructure/services"
 )
 
 type CreateEventUseCase struct {
-	repo   repositories.EventRepository
-	rabbit *services.RabbitMQService
+	repo      repositories.EventRepository
+	publisher ports.EventPublisher
 }
 
-func NewCreateEventUseCase(repo repositories.EventRepository, rabbit *services.RabbitMQService) *CreateEventUseCase {
-	return &CreateEventUseCase{repo: repo, rabbit: rabbit}
+func NewCreateEventUseCase(repo repositories.EventRepository, publisher ports.EventPublisher) *CreateEventUseCase {
+	return &CreateEventUseCase{repo: repo, publisher: publisher}
 }
 
 func (uc *CreateEventUseCase) Execute(event *entities.Event) error {
-	err := uc.repo.Create(event)
-	if err != nil {
+	if err := uc.repo.Create(event); err != nil {
 		return err
 	}
 
-	err = uc.rabbit.PublishEvent(event)
-	return err
+	return uc.publisher.PublishEvent(event)
 }

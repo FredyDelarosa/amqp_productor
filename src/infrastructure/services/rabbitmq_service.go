@@ -6,20 +6,21 @@ import (
 	"log"
 	"sensor/src/core"
 	"sensor/src/domain/entities"
+	"sensor/src/domain/ports"
 	"time"
 
 	"github.com/rabbitmq/amqp091-go"
 )
 
-type RabbitMQService struct{}
+type RabbitMQPublisher struct{}
 
-func NewRabbitMQService() *RabbitMQService {
-	return &RabbitMQService{}
+func NewRabbitMQPublisher() ports.EventPublisher {
+	return &RabbitMQPublisher{}
 }
 
-func (s *RabbitMQService) PublishEvent(event *entities.Event) error {
+func (r *RabbitMQPublisher) PublishEvent(event *entities.Event) error {
 	if core.RabbitChannel == nil {
-		log.Println("no se conecto a rabbit")
+		log.Println("RabbitMQ no conectado")
 		return nil
 	}
 
@@ -36,9 +37,9 @@ func (s *RabbitMQService) PublishEvent(event *entities.Event) error {
 	)
 
 	if err != nil {
-		log.Println("error al enviar el evento a rabbit", err)
+		log.Println("Error publicando evento a RabbitMQ:", err)
 	} else {
-		log.Println("evento enviado a rabbit", string(body))
+		log.Println("Evento enviado a RabbitMQ:", string(body))
 	}
 
 	return err
